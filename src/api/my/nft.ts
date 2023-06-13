@@ -1,15 +1,16 @@
 import express from 'express';
+import body_parser from 'body-parser';
 import { route } from '../../neck';
 import { alchemy } from '../../core/alchemy';
+import { NftFilters } from 'alchemy-sdk';
+
+const secret = require('../../../.secret.json');
 
 const router = express.Router();
 
-router.get('/hi', (req, res) => {
-  res.json({ message: 'hello' });
-});
-
-router.get('/allnfts/:address', async (req, res) => {
-  res.json(await alchemy.nft.getNftsForOwner(req.params.address));
+router.post('/getNftsForOwner', body_parser.json(), async (req, res) => {
+  console.log(req.body);
+  res.json(await alchemy.nft.getNftsForOwner(secret.address, req.body));
 });
 
 export default [route(__filename), router] as any;
